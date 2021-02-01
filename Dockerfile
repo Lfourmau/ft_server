@@ -6,34 +6,33 @@
 #    By: lfourmau <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/26 12:58:25 by lfourmau          #+#    #+#              #
-#    Updated: 2021/01/28 13:45:11 by lfourmau         ###   ########lyon.fr    #
+#    Updated: 2021/02/01 12:28:10 by lfourmau         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
-#image de base
-FROM  debian:jessie
+FROM  debian:buster
 #nginx
-RUN apt-get update\
-&& apt-get -y install nginx
-#Wget->mysql
-RUN apt-cache search wget\
-&& apt-cache search wget | grep wget\
-&& apt-get -y install wget
-#Lsb->mysql
-RUN apt-get update\
-&& apt-get -y install lsb-release\
-&& apt-get -y install lsb
-#try php my admin
-RUN apt-get update\
-&& apt-get -y install php-mbstring php-zip php-gd\
-&& wget https://files.phpmyadmin.net/phpMyAdmin/4.9.7/phpMyAdmin-4.9.7-all-languages.tar.gz\
-&& tar xvf phpMyAdmin-4.9.7-all-languages.tar.gz\
-mv phpMyAdmin-4.9.7-all-languages/ /usr/share/phpmyadmin
-#myql
-RUN apt-get update\
-&& apt-get install gnupg\
-&& cd /tmp\
-&& wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb\
-&& dpkg -i mysql-apt-config*\
-&& apt-get -y update\
-&& apt-get -y install mysql-server
+RUN apt-get update
+RUN apt-get install -y nginx
+#wget
+RUN apt search wget && apt-get install -y  wget
+RUN apt-get update
+#Wordfess
+RUN cd /var/www && wget http://fr.wordpress.org/latest-fr_FR.tar.gz && tar -xzvf latest-fr_FR.tar.gz
+RUN mv /var/www/wordpress blog && rm /var/www/latest-fr_FR.tar.gz
+#RUN adduser blog && chown -R blog:www-data /var/www/blog && chmod -R o-rwx /var/www/blog 
+#PHP
+RUN apt-get update
+RUN apt-get -y install php-cli php-mysql php-curl php-gd php-intl
+RUN apt-get install -y php-fpm
+#RUN touch /etc/php/7.4/fpm/pool.d/blog.conf
+#MARIA db
+RUN apt-get install -y mariadb-server mariadb-client
+#phpmyadmin
+RUN wget -P Downloads https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+#ssl
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN apt-get install -y certbot
+RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 && chmod 600 /etc/ssl/certs/dhparam.pem
+#ENTRYPOINT /srcs/script.sh
