@@ -3,14 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Dockerfile                                         :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lfourmau <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/26 12:58:25 by lfourmau          #+#    #+#              #
-#    Updated: 2021/02/01 12:28:10 by lfourmau         ###   ########lyon.fr    #
+#    Updated: 2021/02/02 14:43:22 by lfourmau         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 FROM  debian:buster
+COPY /srcs .
 #nginx
 RUN apt-get update
 RUN apt-get install -y nginx
@@ -29,10 +30,17 @@ RUN apt-get install -y php-fpm
 #MARIA db
 RUN apt-get install -y mariadb-server mariadb-client
 #phpmyadmin
-RUN wget -P Downloads https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+RUN mkdir /var/www/html/phpmyadmin
+RUN cd /var/www/html/phpmyadmin && wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+RUN cd /var/www/html/phpmyadmin && tar xvf phpMyAdmin-latest-all-languages.tar.gz
+RUN mv config.inc.php /var/www/html/phpmyadmin/
+RUN cd /var/www/html/phpmyadmin && chmod 660 config.inc.php
+RUN rm /etc/nginx/sites-available/default
+RUN mv default /etc/nginx/sites-available
+RUN chown -R www-data:www-data /var/www/html/*
 #ssl
 RUN apt-get update
 RUN apt-get install -y software-properties-common
 RUN apt-get install -y certbot
-RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 && chmod 600 /etc/ssl/certs/dhparam.pem
+#RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 && chmod 600 /etc/ssl/certs/dhparam.pem
 #ENTRYPOINT /srcs/script.sh
