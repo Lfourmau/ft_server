@@ -6,7 +6,7 @@
 #    By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/26 12:58:25 by lfourmau          #+#    #+#              #
-#    Updated: 2021/02/03 14:16:55 by lfourmau         ###   ########lyon.fr    #
+#    Updated: 2021/02/04 08:42:09 by lfourmau         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,4 +42,4 @@ RUN chown -R www-data:www-data /var/www/html/phpmyadmin/*
 #RUN apt-get install -y software-properties-common
 #RUN apt-get install -y certbot
 #RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 && chmod 600 /etc/ssl/certs/dhparam.pem
-#ENTRYPOINT /srcs/script.sh
+ENTRYPOINT ["bash", "start.sh"]
