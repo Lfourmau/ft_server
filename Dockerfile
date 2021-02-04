@@ -6,7 +6,7 @@
 #    By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/26 12:58:25 by lfourmau          #+#    #+#              #
-#    Updated: 2021/02/04 08:42:09 by lfourmau         ###   ########lyon.fr    #
+#    Updated: 2021/02/04 12:55:00 by lfourmau         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,10 @@ RUN mv /var/www/wordpress blog && rm /var/www/latest-fr_FR.tar.gz
 RUN apt-get update
 RUN apt-get -y install php-cli php-mysql php-curl php-gd php-intl php-json php-mbstring php-zip php-pear php-gettext php-xml php-gd php-cgi php-fpm
 #RUN touch /etc/php/7.4/fpm/pool.d/blog.conf
-#MARIA db
+#MARIA db et mysql
 RUN apt-get install -y mariadb-server mariadb-client
+RUN service mysql start && sh mysql.sh
+RUN mysql -u root
 #phpmyadmin
 RUN mkdir /var/www/html/phpmyadmin
 RUN cd /var/www/html/ && wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
