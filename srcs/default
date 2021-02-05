@@ -49,6 +49,10 @@ server {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
 		try_files $uri $uri/ =404;
+		 autoindex on;
+    autoindex_exact_size off;
+    autoindex_format html;
+    autoindex_localtime on;
 	}
 	# pass PHP scripts to FastCGI server
 	#
@@ -59,6 +63,10 @@ server {
 		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     include fastcgi_params;
+	 autoindex on;
+    autoindex_exact_size off;
+    autoindex_format html;
+    autoindex_localtime on;
 	#	# With php-cgi (or other tcp sockets):
  	#	fastcgi_pass 127.0.0.1:9000;
 	}
