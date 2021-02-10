@@ -6,17 +6,15 @@
 #    By: lfourmau <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/10 09:37:16 by lfourmau          #+#    #+#              #
-#    Updated: 2021/02/10 09:38:54 by lfourmau         ###   ########lyon.fr    #
+#    Updated: 2021/02/10 10:07:34 by lfourmau         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 FROM  debian:buster
 COPY /srcs .
+ENV AUTOINDEX="on"
 #nginx
 RUN apt-get update && apt upgrade -y
 RUN apt-get install -y nginx
-#ssl
-RUN apt-get install -y openssl
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=FR/ST=France/L=Lyon/emailAddress=lfourmau@student.42lyon.fr" -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
 #wget
 RUN apt-get install -y  wget
 #RUN adduser blog && chown -R blog:www-data /var/www/blog && chmod -R o-rwx /var/www/blog 
@@ -33,10 +31,13 @@ RUN cd /var/www/html/ && wget https://www.phpmyadmin.net/downloads/phpMyAdmin-la
 RUN cd /var/www/html/ && tar xvf phpMyAdmin-latest-all-languages.tar.gz --strip-components=1 -C /var/www/html/phpmyadmin
 RUN mv config.inc.php /var/www/html/phpmyadmin/
 RUN cd /var/www/html/phpmyadmin/ && chmod 660 config.inc.php && rm config.sample.inc.php
-RUN rm /etc/nginx/sites-available/default
-RUN mv default /etc/nginx/sites-available
+RUN rm /etc/nginx/sites-enabled/default
+RUN mv nginx.conf /etc/nginx/sites-enabled/
 RUN chmod 444 /var/www/html/phpmyadmin/config.inc.php
 RUN chown -R www-data:www-data /var/www/html/phpmyadmin/*
+#ssl
+RUN apt-get install -y openssl
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=FR/ST=France/L=Lyon/emailAddress=lfourmau@student.42lyon.fr" -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
 #Wordfess
 RUN cd /var/www/html && wget http://fr.wordpress.org/latest-fr_FR.tar.gz && tar -xzvf latest-fr_FR.tar.gz
 RUN rm /var/www/html/latest-fr_FR.tar.gz && rm /var/www//html/wordpress/wp-config-sample.php && mv wp-config.php /var/www/html/wordpress
