@@ -32,7 +32,7 @@ $cfg['Servers'][$i]['auth_type'] = 'cookie';
 $cfg['Servers'][$i]['host'] = 'localhost';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
-
+$cfg['TempDir'] = '/var/www/html/phpmyadmin/tmp';
 /**
  * phpMyAdmin configuration storage settings.
  */
